@@ -1,4 +1,5 @@
 class BlogPostsController < ApplicationController
+  before_action :authenticate_user!, except: [:index, :show]
   before_action :set_blog_post, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -11,7 +12,11 @@ class BlogPostsController < ApplicationController
   end
 
   def new
-    @blog_post = BlogPost.new
+    if user_signed_in?
+      @blog_post = BlogPost.new
+    else
+      redirect_to root_path
+    end
   end
 
   def edit
